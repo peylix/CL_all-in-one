@@ -35,16 +35,16 @@ def Im2Patch(img, win, stride=1):
 
 
 
-
-
 class PairedImageDataset(data.Dataset):
     """Generic paired image dataset.
-    Expects two directories: input_dir (degraded) and gt_dir (ground truth),
-    with matching filenames between them.
+    Expects two directories: input_dir (degraded) and gt_dir (ground truth).
+    If filenames differ between input and gt, provide gt_name_fn to map
+    input filename to gt filename (e.g. '0_rain.png' -> '0_clean.png').
     """
-    def __init__(self, input_dir, gt_dir, size=240):
+    def __init__(self, input_dir, gt_dir, size=240, gt_name_fn=None):
         super(PairedImageDataset, self).__init__()
         self.size = size
+        self.gt_name_fn = gt_name_fn
         self.input_imgs_dir = sorted(os.listdir(input_dir))
         self.input_imgs = [os.path.join(input_dir, img) for img in self.input_imgs_dir]
         self.gt_dir = gt_dir
@@ -56,6 +56,8 @@ class PairedImageDataset(data.Dataset):
                 index = random.randint(0, len(self.input_imgs) - 1)
                 inp = Image.open(self.input_imgs[index])
         filename = os.path.basename(self.input_imgs[index])
+        if self.gt_name_fn:
+            filename = self.gt_name_fn(filename)
         gt = Image.open(os.path.join(self.gt_dir, filename))
         gt = tfs.CenterCrop(inp.size[::-1])(gt)
         if isinstance(self.size, int):
@@ -71,13 +73,15 @@ class PairedImageDataset(data.Dataset):
         return len(self.input_imgs)
 
 
-
+def _raindrop_gt_name(filename):
+    """Map raindrop input filename to gt filename: '0_rain.png' -> '0_clean.png'"""
+    return filename.replace('_rain', '_clean')
 
 def get_trainloader(args):
     path = args.data_path
 
     haze_traindata = PairedImageDataset(path+'/CVPR19RainTrain/train/data', path+'/CVPR19RainTrain/train/gt', size=args.crop_size)
-    rain_traindata = PairedImageDataset(path+'/raindrop_data/train/data', path+'/raindrop_data/train/gt', size=args.crop_size)
+    rain_traindata = PairedImageDataset(path+'/raindrop_data/train/data', path+'/raindrop_data/train/gt', size=args.crop_size, gt_name_fn=_raindrop_gt_name)
     snow_traindata = PairedImageDataset(path+'/Snow100K-training/synthetic', path+'/Snow100K-training/gt', size=args.crop_size)
 
     haze_loadertrain = DataLoader(dataset=haze_traindata, batch_size=args.bs, shuffle=True)
@@ -95,7 +99,7 @@ def get_testloader(args):
     path = args.data_path
 
     haze_testdata = PairedImageDataset(path+'/CVPR19RainTrain/test/data', path+'/CVPR19RainTrain/test/gt', size='whole img')
-    rain_testdata = PairedImageDataset(path+'/raindrop_data/test_a/data', path+'/raindrop_data/test_a/gt', size='whole img')
+    rain_testdata = PairedImageDataset(path+'/raindrop_data/test_a/data', path+'/raindrop_data/test_a/gt', size='whole img', gt_name_fn=_raindrop_gt_name)
     snow_testdata = PairedImageDataset(path+'/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-M/synthetic', path+'/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-M/gt', size='whole img')
 
     haze_loadertest = DataLoader(dataset=haze_testdata, batch_size=1, shuffle=True)

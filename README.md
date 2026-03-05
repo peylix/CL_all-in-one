@@ -67,3 +67,14 @@ The meaning of hyperparameters in the command line is as follows:
 | --resume            | training from previous tasks                    |
 
 If you encounter any issues or have any questions, please let us know. 
+
+## Running the project with `uv`
+
+Since the original `requirements.txt` was something directly dumped from the conda environment and is hard to utilize, I have created a [`pyproject.toml`](./pyproject.toml) to make it much easier to run with `uv`.
+
+For running the project, ensure you have `uv` installed and execute the following command:
+
+```bash
+uv sync
+uv run python main.py --task_order haze rain snow --memory_size 500 --exp_name haze_rain_snow --eval_step 20000 --device cuda:0
+```

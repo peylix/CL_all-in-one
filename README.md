@@ -72,9 +72,9 @@ If you encounter any issues or have any questions, please let us know.
 
 Since the original `requirements.txt` was something directly dumped from the conda environment and is hard to utilize, I have created a [`pyproject.toml`](./pyproject.toml) to make it much easier to run with `uv`.
 
-For running the project, ensure you have `uv` installed and execute the following command:
+For running the project, ensure you have `uv` installed and execute the following commands:
 
 ```bash
 uv sync
-uv run python main.py --task_order haze rain snow --memory_size 500 --exp_name haze_rain_snow --eval_step 20000 --device cuda:0
+uv run python main.py --task_order haze rain snow --memory_size 500 --exp_name haze_rain_snow --eval_step 20000 --device cuda:0 --data_path <path_to_datasets>
 ```

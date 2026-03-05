@@ -76,5 +76,11 @@ For running the project, ensure you have `uv` installed and execute the followin
 
 ```bash
 uv sync
-uv run python main.py --task_order haze rain snow --memory_size 500 --exp_name haze_rain_snow --eval_step 20000 --device cuda:0 --data_path <path_to_datasets>
+uv run main.py --task_order haze rain snow --memory_size 500 --exp_name haze_rain_snow --eval_step 20000 --device cuda:0 --data_path <path_to_datasets>
+```
+
+For installing `uv`,
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```

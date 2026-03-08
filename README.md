@@ -8,7 +8,7 @@
 
 
 ## Requirements
-- Python 3.6+  
+- Python 3.6+
 ```pip install -r requirements.txt```
 
 ## Experimental Setup
@@ -66,9 +66,11 @@ The meaning of hyperparameters in the command line is as follows:
 | --eval_step         | each step for eval                              |
 | --resume            | training from previous tasks                    |
 
-If you encounter any issues or have any questions, please let us know. 
+If you encounter any issues or have any questions, please let us know.
 
 ## Running the project with `uv`
+
+### For training
 
 Since the original `requirements.txt` was something directly dumped from the conda environment and is hard to utilize, I have created a [`pyproject.toml`](./pyproject.toml) to make it much easier to run with `uv`.
 
@@ -83,4 +85,35 @@ For installing `uv`,
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### For inference
+
+To run inference, you can use the following commands:
+
+```bash
+# Basic inference (without saving ground truth)
+uv run inference.py \
+    --checkpoint ./checkpoints/haze_rain_snow/<task_name>/ffa_best.pk \
+    --input_dir <path_to_input_images> \
+    --output_dir ./results/<task_name> \
+    --device cuda:0
+
+# With ground truth saving (for later evaluation)
+# Add --gt_dir to save gt alongside predictions
+# Add --gt_name_fn raindrop if input/gt filenames differ (e.g. XXX_rain.png -> XXX_clean.png)
+uv run inference.py \
+    --checkpoint ./checkpoints/haze_rain_snow/<task_name>/ffa_best.pk \
+    --input_dir <path_to_input_images> \
+    --gt_dir <path_to_gt_images> \
+    --output_dir ./results/<task_name> \
+    --device cuda:0
+```
+
+### For evaluation
+
+To evaluate the results, you can use the following commands:
+
+```bash
+uv run measure.py --results ./results/<task_name>/pred --gt ./results/<task_name>/gt
 ```

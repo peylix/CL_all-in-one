@@ -1,10 +1,5 @@
-"""Inference script for a single task.
-
-Usage:
-    # With ground truth saving
-    uv run inference.py --checkpoint ./checkpoints/haze_rain_snow/rain/ffa_best.pk
-        --input_dir /path/to/raindrop/test_a/data --gt_dir /path/to/raindrop/test_a/gt \
-        --gt_name_fn raindrop --output_dir ./results/rain --device cuda:0
+"""
+Inference script for a single task.
 """
 
 import os

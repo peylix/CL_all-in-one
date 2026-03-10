@@ -67,7 +67,7 @@ class LossNetwork(torch.nn.Module):
             # anchor_input2 = torch.exp(torch.div(-self.L1(anchor_features[i], input2_features[i]), 0.5))
             # dehaze_other_method = torch.exp(torch.div(-self.L1(dehaze_features[i], other_method_features[i]), 0.5))
 
-            per_loss = -torch.log(anchor_gt / (anchor_gt + anchor_input1))
+            per_loss = -torch.log(anchor_gt / (anchor_gt + anchor_input1 + 1e-8) + 1e-8)
             loss.append(self.weight[i] * per_loss)
 
         return sum(loss)

@@ -83,7 +83,7 @@ for (( i=0; i<NUM_TASKS; i++ )); do
         echo "Test: ${TEST_TASK} | Checkpoint: after_${CKPT_TASK}"
         echo "============================================"
 
-        uv run python inference.py \
+        uv run inference.py \
             --checkpoint "$CHECKPOINT" \
             --input_dir "$INPUT_DIR" \
             --gt_dir "$GT_DIR" \
@@ -95,4 +95,41 @@ for (( i=0; i<NUM_TASKS; i++ )); do
     done
 done
 
-echo "All done!"
+# ===================== Measure =====================
+echo ""
+echo "============================================"
+echo "            Running Measurements            "
+echo "============================================"
+echo ""
+
+RESULTS_FILE="./results/${EXP_NAME}/metrics.txt"
+> "$RESULTS_FILE"
+
+for (( i=0; i<NUM_TASKS; i++ )); do
+    TEST_TASK=${TASK_ORDER[$i]}
+
+    for (( j=i; j<NUM_TASKS; j++ )); do
+        CKPT_TASK=${TASK_ORDER[$j]}
+        PRED_DIR="./results/${EXP_NAME}/${TEST_TASK}/after_${CKPT_TASK}/pred"
+        GT_SAVE_DIR="./results/${EXP_NAME}/${TEST_TASK}/after_${CKPT_TASK}/gt"
+
+        if [ ! -d "$PRED_DIR" ]; then
+            echo "[SKIP] No predictions found: $PRED_DIR"
+            continue
+        fi
+
+        echo "--------------------------------------------"
+        echo "Measure: ${TEST_TASK} | Checkpoint: after_${CKPT_TASK}"
+        echo "--------------------------------------------"
+
+        OUTPUT=$(uv run tests/measure.py --results "$PRED_DIR" --gt "$GT_SAVE_DIR" 2>&1 | tail -2)
+        echo "$OUTPUT"
+        echo "[${TEST_TASK} | after_${CKPT_TASK}] $OUTPUT" >> "$RESULTS_FILE"
+        echo ""
+    done
+done
+
+echo "============================================"
+echo "  All metrics saved to: $RESULTS_FILE"
+echo "============================================"
+cat "$RESULTS_FILE"

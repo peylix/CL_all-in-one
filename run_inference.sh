@@ -51,8 +51,8 @@ get_test_args() {
             GT_NAME_FN="--gt_name_fn raindrop"
             ;;
         snow)
-            INPUT_DIR="${DATA_PATH}/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-M/synthetic"
-            GT_DIR="${DATA_PATH}/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-M/gt"
+            INPUT_DIR="${DATA_PATH}/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-L/synthetic"
+            GT_DIR="${DATA_PATH}/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-L/gt"
             GT_NAME_FN=""
             ;;
         *)

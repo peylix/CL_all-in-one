@@ -100,7 +100,7 @@ def get_testloader(args):
 
     haze_testdata = PairedImageDataset(path+'/CVPR19RainTrain/test/data', path+'/CVPR19RainTrain/test/gt', size='whole img')
     rain_testdata = PairedImageDataset(path+'/raindrop_data/test_a/data', path+'/raindrop_data/test_a/gt', size='whole img', gt_name_fn=_raindrop_gt_name)
-    snow_testdata = PairedImageDataset(path+'/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-M/synthetic', path+'/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-M/gt', size='whole img')
+    snow_testdata = PairedImageDataset(path+'/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-L/synthetic', path+'/Snow100K-testing/jdway/GameSSD/overlapping/test/Snow100K-L/gt', size='whole img')
 
     haze_loadertest = DataLoader(dataset=haze_testdata, batch_size=1, shuffle=True)
     rain_loadertest = DataLoader(dataset=rain_testdata, batch_size=1, shuffle=True)

@@ -38,7 +38,7 @@ $datasets/
         |–– synthetic
         |–– gt
     |–– test
-        |–– Snow100K-M
+        |–– Snow100K-L
             |–– synthetic
             |–– gt
 ```
